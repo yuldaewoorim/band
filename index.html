@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Club Check</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-bg"></div>
+    <main class="app-shell">
+      <section id="authView" class="auth-view panel">
+        <div class="brand-block">
+          <p class="eyebrow">CLUB CHECK</p>
+          <h1>동아리 출결 포털</h1>
+          <p class="intro">
+            관리자는 계정을 일괄 발급하고, 회원은 본인 계정으로 로그인해 스스로 출결을 기록합니다.
+          </p>
+        </div>
+
+        <form id="loginForm" class="login-card">
+          <h2>로그인</h2>
+          <label>
+            아이디
+            <input id="loginUsername" type="text" autocomplete="username" required />
+          </label>
+          <label>
+            비밀번호
+            <input id="loginPassword" type="password" autocomplete="current-password" required />
+          </label>
+          <button type="submit" class="primary-button">입장하기</button>
+                 <p id="loginError" class="form-error" hidden></p>
+        </form>
+      </section>
+
+      <section id="appView" hidden>
+        <header class="topbar panel">
+          <div>
+            <p class="eyebrow">Attendance Workspace</p>
+            <h2 id="workspaceTitle">동아리 출결</h2>
+          </div>
+          <div class="topbar-actions">
+            <div class="user-chip">
+              <span id="sessionName"></span>
+              <small id="sessionRole"></small>
+            </div>
+            <button id="logoutButton" class="ghost-button" type="button">로그아웃</button>
+          </div>
+        </header>
+
+        <section id="adminView" hidden>
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Session Control</p>
+                  <h3>출결 세션 관리</h3>
+                </div>
+              </div>
+
+              <form id="sessionForm" class="stack-form">
+                <label>
+                  세션 이름
+                  <input id="sessionTitle" type="text" placeholder="정기 모임 5월 3주차" required />
+                </label>
+                <label>
+                  날짜
+                  <input id="sessionDate" type="date" required />
+                </label>
+                <button type="submit" class="primary-button">세션 열기</button>
+              </form>
+
+              <div class="list-block">
+                <div class="inline-head">
+                  <h4>세션 목록</h4>
+                  <button id="refreshAdminButton" class="ghost-button" type="button">새로고침</button>
+                </div>
+                <form id="reportForm" class="stack-form compact-form">
+                  <label>기간 시작일<input id="reportFrom" type="date" required /></label>
+                  <label>기간 종료일<input id="reportTo" type="date" required /></label>
+                  <button id="exportSlidesButton" class="tiny-button" type="submit">회원별 슬라이드 저장</button>
+                </form>
+                <div id="sessionList" class="list-grid"></div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">Account Control</p>
+                  <h3>회원 계정 발급</h3>
+                </div>
+              </div>
+
+              <form id="memberForm" class="stack-form">
+                <label>
+                  이름
+                  <input id="memberName" type="text" placeholder="홍길동" required />
+                </label>
+                <label>
+                  학번/기수
+                  <input id="memberCode" type="text" placeholder="24학번" required />
+                </label>
+                <label>
+                  로그인 아이디
+                  <input id="memberUsername" type="text" placeholder="hong24" required />
+                </label>
+                <label>
+                  비밀번호
+                  <input id="memberPassword" type="text" placeholder="관리자가 일괄 설정" required />
+                </label>
+                <button type="submit" class="primary-button">회원 추가</button>
+              </form>
+
+              <div class="list-block">
+                <div class="inline-head">
+                  <h4>회원 목록</h4>
+                  <button id="exportButton" class="ghost-button" type="button">CSV 내보내기</button>
+                </div>
+                <form id="adminCreateForm" class="stack-form compact-form">
+                  <label>관리자 이름<input id="adminCreateName" type="text" required /></label>
+                  <label>관리자 아이디<input id="adminCreateUsername" type="text" required /></label>
+                  <label>관리자 비밀번호<input id="adminCreatePassword" type="password" required /></label>
+                  <button class="tiny-button" type="submit">관리자 추가</button>
+                </form>
+                <form id="adminPasswordForm" class="stack-form compact-form">
+                  <label>현재 비밀번호<input id="adminCurrentPassword" type="password" required /></label>
+                  <label>새 비밀번호<input id="adminNewPassword" type="password" required /></label>
+                  <button class="tiny-button" type="submit">관리자 비밀번호 변경</button>
+                </form>
+                <div id="adminList" class="list-grid"></div>
+                <div id="memberList" class="list-grid"></div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section id="memberView" hidden>
+          <div class="dashboard-grid member-grid">
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">My Attendance</p>
+                  <h3>내 출결 작성</h3>
+                </div>
+              </div>
+              <div id="memberActiveSession"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">History</p>
+                  <h3>내 기록</h3>
+                </div>
+              </div>
+              <div id="memberHistory" class="list-grid"></div>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <template id="statusTemplate">
+      <div class="status-row">
+        <button data-status="present" type="button">출석</button>
+        <button data-status="late" type="button">지각</button>
+        <button data-status="absent" type="button">결석</button>
+      </div>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
