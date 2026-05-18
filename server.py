@@ -20,6 +20,10 @@ db = client["attendance_db"]
 
 users = db["users"]
 
+users.insert_one({
+    "name": "test",
+    "time": str(datetime.now())
+})
 
 ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / "attendance.db"
