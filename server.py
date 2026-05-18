@@ -11,6 +11,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
+from pymongo import MongoClient
 
 
 ROOT = Path(__file__).resolve().parent
